@@ -1,0 +1,158 @@
+﻿@page "/courses"
+@attribute [StreamRendering]
+@attribute [Authorize]
+
+<PageTitle>Courses</PageTitle>
+
+<section id="courses">
+    <div class="container">
+
+        <nav aria-label="breadcrumb">
+            <ul class="breadcrumb">
+
+                <li class="breadcrumb-item">
+                    <a asp-controller="Home" asp-action="Index">
+                        <span><i class="fa-solid fa-house" aria-hidden="true"></i></span>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <span><i class="fa-solid fa-angles-right" aria-hidden="true"></i></span>
+                    <span>Courses</span>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="header-courses">
+            <h1>Courses</h1>
+            <form class="filters">
+
+                <div class="select">
+                    <div class="selected">All categories</div>
+                    <div class="select-options">
+                        <div class="option" data-value="all">All categories</div>
+@*                         @if (courses.Categories != null)
+                        {
+                            foreach (var category in Model.Categories)
+                            {
+                                <div class="option" data-value="@category.CategoryName">@category.CategoryName</div>
+                            }
+                        } *@
+                    </div>
+                </div>
+
+                <div class="input-search-group">
+                    <input id="searchQuery" name="searchQuery" placeholder="Search courses" />
+                    <i class="fa-regular fa-search"></i>
+                </div>
+
+            </form>
+        </div>
+        <div class="items">
+            @if (courses == null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else
+            {
+                @foreach (var course in courses)
+                {
+                    <div class="course">
+                        @if (course.IsBestSeller)
+                        {
+                            <div class="best-seller">Best Seller</div>
+                        }
+
+                        <button id="bookmark-button" class="btn-circle bookmark" onclick="saveCourse(@course.Id)" data-bs-toggle="tooltip" data-bs-title="Save Course"><i class="fa-regular fa-bookmark"></i></button>
+
+                        <img src="~/images/courses/@course.ImageUrl" alt="@course.Title">
+
+                        <div class="content" onclick="location.href='/singlecourse/@course.Id'">
+                            <h5>@course.Title</h5>
+                            <p class="author">By @course.Author</p>
+                            <div class="pricing">
+                                @if (!string.IsNullOrEmpty(course.DiscountPrice))
+                                {
+                                    <div class="discount">@course.DiscountPrice</div>
+                                }
+
+                                <div class="original @(!string.IsNullOrEmpty(course.DiscountPrice) ? "discount-enabled" : "")">@course.OriginalPrice</div>
+                            </div>
+                            <div class="footer">
+                                <div class="hours">
+                                    <i class="fa-regular fa-clock"></i>@course.Hours hours
+                                </div>
+                                <div class="likes">
+                                    <i class="fa-regular fa-thumbs-up"></i>@course.LikesInProcent (@course.LikesInNumbers)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+@*         @if (Model.Courses != null)
+        {
+
+
+            @if (Model.Pagination != null && Model.Pagination.TotalPages > 1)
+            {
+                <div class="pagination">
+                    <i class="fa-solid fa-less-than"></i>
+                    @for (int i = 1; i <= Model.Pagination.TotalPages; i++)
+                    {
+                        if (i == Model.Pagination.CurrentPage)
+                        {
+                            <span class="number active">@i</span>
+                        }
+                        else
+                        {
+                            <a class="number" href="@Url.Action("Courses", new { pageNumber = i, pageSize = Model.Pagination.PageSize })">@i</a>
+                        }
+                    }
+                    <i class="fa-solid fa-greater-than"></i>
+                </div>
+            }
+        } *@
+        <div class="work-section">
+            <div class="work-text">
+                <h5>Ready to get Started?</h5>
+                <h1>Take Your <span class="header-skills">Skills</span> to the <br>Next Level</h1>
+                <button class="btn-theme-s">Work with us</button>
+            </div>
+            <div class="work-img">
+                <img src="~/images/work-image.svg" alt="">
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    private CourseModel[]? courses;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            courses = await Http.GetFromJsonAsync<CourseModel[]>("courseprovider-win23jsbackend-nikesjo.azurewebsites.net/api/courses");
+        }
+        catch (Exception ex) {}
+    }
+
+    private class CourseModel
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = null!;
+        public string Author { get; set; } = null!;
+        public string OriginalPrice { get; set; } = null!;
+        public string? DiscountPrice { get; set; }
+        public int Hours { get; set; }
+        public bool IsBestSeller { get; set; }
+        public string? LikesInProcent { get; set; }
+        public string? LikesInNumbers { get; set; }
+        public string? ImageUrl { get; set; }
+        public string? AuthorImageUrl { get; set; }
+        public string Category { get; set; } = null!;
+    }
+}

@@ -1,0 +1,42 @@
+#program-details {
+
+    .container {
+
+        .number {
+            display: flex;
+            align-items: center;
+            gap: 55px;
+
+            .circle {
+                display: none;
+                height: 50px;
+                width: 50px;
+                border-radius: 50%;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0);
+
+                @include lg {
+                    display: block;
+                }
+
+                p {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100%;
+                    border: 7px solid rgba(131, 130, 130, 0.2);
+                    border-radius: 50%;
+                    box-sizing: border-box;
+                }
+            }
+
+            .square-text-details {
+                max-width: 650px;
+                padding: 20px;
+
+                .circle-text {
+                    margin-top: 35px;
+                }
+            }
+        }
+    }
+}

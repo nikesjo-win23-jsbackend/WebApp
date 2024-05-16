@@ -1,0 +1,235 @@
+#courses {
+    .container {
+        padding: 0;
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-top: 30px;
+            margin-bottom: 20px;
+            font-size: 14px;
+
+            i {
+                color: var(--color-gray-600);
+            }
+
+            a {
+                text-decoration: none;
+                color: var(--color-gray-600);
+
+                &:hover {
+                    transition: all 0.15s ease-in-out;
+                    cursor: pointer;
+                    color: var(--color-info);
+                }
+            }
+
+            .active {
+                color: var(--color-theme);
+
+                i {
+                    padding-right: 15px;
+                    font-size: 12px;
+                }
+
+                &::before {
+                    display: none;
+                }
+            }
+        }
+
+        .header-courses {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-direction: column;
+
+            @include md {
+                flex-direction: row;
+            }
+
+            .filters {
+                display: flex;
+                gap: 25px;
+                flex-direction: column-reverse;
+
+                @include lg {
+                    flex-direction: row;
+                }
+            }
+        }
+
+        .items {
+            display: grid;
+            grid-template-columns: auto;
+            gap: 25px;
+            justify-content: center;
+
+            @include md {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 25px;
+            }
+
+            @include xl {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 30px;
+            }
+
+            .course {
+                @include shadow-s;
+                position: relative;
+                border: none;
+                border-radius: 15px;
+                overflow: hidden;
+                transition: box-shadow 0.2s ease-in-out;
+                max-width: 416px;
+                height: 473px;
+
+                &:hover {
+                    cursor: pointer;
+                    box-shadow: 0 4px 10px rgb(160, 160, 160, 0.50);
+                }
+
+                .best-seller {
+                    @include badge-success;
+                    position: absolute;
+                    top: 15px;
+                    left: 15px;
+                }
+
+                .bookmark {
+                    position: absolute;
+                    top: 15px;
+                    right: 15px;
+                }
+
+                img {
+                    min-width: 100%;
+                    height: auto;
+                }
+
+                .content {
+                    text-align: left;
+                    padding: 10px 20px 20px 20px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    height: 220px;
+
+                    h5 {
+                        @include text-m;
+                        color: var(--color-gray-800);
+                        font-weight: 800;
+
+                        @include xl {
+                            @include h5;
+                            color: var(--color-gray-800);
+                        }
+                    }
+
+                    .author {
+                        @include text-s;
+                        color: var(--color-gray-700);
+                    }
+
+                    .pricing {
+                        display: flex;
+                        gap: 10px;
+                        font-size: 18px;
+                        font-weight: 700;
+                        padding-bottom: 15px;
+                        margin-top: auto;
+
+                        .discount {
+                            color: var(--color-danger);
+                        }
+
+                        .original {
+                            color: var(--color-theme);
+                        }
+
+                        .discount-enabled {
+                            color: var(--color-gray-600);
+                            font-weight: 400;
+                            font-size: 16px;
+                            text-decoration: line-through;
+                        }
+                    }
+
+                    .footer {
+                        @include text-s;
+                        display: flex;
+                        margin-top: auto;
+                        gap: 20px;
+                        color: var(--color-gray-600);
+                        padding-top: 20px;
+                        border-top: 1px solid var(--color-gray-300);
+
+                        i {
+                            padding-right: 5px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .work-section {
+            display: flex;
+            justify-content: center;
+            background-color: var(--color-gray-100);
+            align-items: center;
+            gap: 80px;
+
+            .work-text {
+
+                h5 {
+                    @include h6;
+                    margin-top: 50px;
+
+                    @include md {
+                        @include h5;
+                    }
+
+                    @include xl {
+                        @include h5;
+                    }
+                }
+
+                h1 {
+                    @include h3;
+
+                    @include md {
+                        @include h1;
+                    }
+
+                    @include xl {
+                        @include h1;
+                    }
+                }
+
+                .header-skills {
+                    color: var(--color-theme-secondary);
+                }
+
+                .btn-theme-s {
+                    margin-bottom: 50px;
+                }
+            }
+
+            .work-img {
+                display: none;
+
+                @include xl {
+                    display: block;
+                    margin-top: 50px;
+                    margin-bottom: 50px;
+                }
+            }
+        }
+    }
+}

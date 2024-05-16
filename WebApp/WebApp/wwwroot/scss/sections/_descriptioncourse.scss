@@ -1,0 +1,89 @@
+#description-course {
+
+    .container {
+
+        .description-header {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 80px;
+
+            @media(max-width: 1200px) {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .singlecourse-header {
+                h1 {
+                    padding-bottom: 10px;
+                }
+
+
+                .learn-what {
+                    h2 {
+                        padding-top: 20px;
+                    }
+
+                    .checked-info {
+                        display: flex;
+                        align-items: baseline;
+                        gap: 10px;
+
+                        i {
+                            color: var(--color-theme);
+                        }
+                    }
+                }
+            }
+
+            .singlecourse-box {
+                display: flex;
+                flex-direction: column;
+                padding: 30px 100px 40px 30px;
+                height: 100%;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+                h4 {
+                    padding-bottom: 10px;
+                }
+
+                .course-include {
+                    display: flex;
+                    align-items: baseline;
+                    gap: 10px;
+
+                    p {
+                        margin-bottom: 10px;
+                    }
+                }
+
+                .pricing {
+                    display: flex;
+                    gap: 10px;
+                    font-size: 32px;
+                    font-weight: 700;
+                    padding: 25px 0 25px 0;
+
+                    .discount {
+                        color: var(--color-gray-900);
+                    }
+
+                    .original {
+                        color: var(--color-theme);
+                    }
+
+                    .discount-enabled {
+                        font-size: 20px;
+                        color: var(--color-gray-600);
+                        font-weight: 400;
+                        text-decoration: line-through;
+                    }
+                }
+
+                .btn-theme-s {
+                    width: 60%;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}

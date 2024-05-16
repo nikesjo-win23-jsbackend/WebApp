@@ -1,0 +1,90 @@
+#account-details {
+    .container {
+        display: flex;
+        flex-direction: column;
+
+        @include lg {
+            flex-direction: row;
+        }
+
+        .details-preview {
+            padding: 50px 20px;
+            display: flex;
+            flex-direction: column;
+
+            @include lg {
+                padding: 50px 0 0 100px;
+                border-left: 1px solid var(--color-gray-300);
+            }
+
+            #statusMessage {
+                margin-top: 20px;
+            }
+
+            h2 {
+                @include h3;
+                padding-bottom: 20px;
+
+                @include lg {
+                    @include h2;
+                }
+            }
+
+            form {
+                margin-bottom: 40px;
+
+                h5 {
+                    color: var(--color-theme);
+                }
+
+                label {
+                    color: var(--color-gray-900);
+                    font-weight: 600;
+
+                    span {
+                        color: var(--color-gray-600);
+                    }
+                }
+
+                input {
+                    padding: 10px 15px;
+                    border-radius: 8px;
+                    background-color: var(--color-gray-000);
+                    border: 1px solid var(--color-gray-400);
+                    color: var(--color-gray-900);
+
+                    &::placeholder {
+                        color: var(--color-gray-500);
+                    }
+
+                    &:focus {
+                        @include theme-secondary-shadow;
+                        border-color: var(--color-theme-opacity);
+                    }
+                }
+
+                textarea {
+                    resize: none;
+                    background-color: var(--color-gray-000);
+                    border: 1px solid var(--color-gray-400);
+
+                    &::placeholder {
+                        color: var(--color-gray-500);
+                    }
+
+                    &:focus {
+                        @include theme-secondary-shadow;
+                        border-color: var(--color-theme-opacity);
+                    }
+                }
+            }
+
+            #addressChanges {
+                h5 {
+                    border-top: 1px solid var(--color-gray-300);
+                    padding-top: 25px;
+                }
+            }
+        }
+    }
+}
