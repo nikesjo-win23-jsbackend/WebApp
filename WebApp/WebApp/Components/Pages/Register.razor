@@ -19,7 +19,7 @@
 
 <section id="signup">
     <div class="container">
-        <EditForm FormName="signupform" Model="SignUpForm" OnInvalidSubmit="OnValidSubmit" method="post" novalidate>
+        <EditForm FormName="signupform" Model="SignUpForm" OnValidSubmit="OnValidSubmit" asp-route-returnUrl="@ReturnUrl" method="post" novalidate>
             <DataAnnotationsValidator />
             @if (!string.IsNullOrEmpty(StatusMessage))
             {
@@ -88,12 +88,12 @@
     public async Task OnValidSubmit(EditContext editContext)
     {
         var user = new ApplicationUser
-        {
-            FirstName = SignUpForm.FirstName,
-            LastName = SignUpForm.LastName,
-            UserName = SignUpForm.Email,
-            Email = SignUpForm.Email
-        };
+            {
+                FirstName = SignUpForm.FirstName,
+                LastName = SignUpForm.LastName,
+                UserName = SignUpForm.Email,
+                Email = SignUpForm.Email
+            };
 
         if (await UserManager.Users.AnyAsync(x => x.Email == user.Email))
         {

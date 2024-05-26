@@ -8,15 +8,11 @@
     <NavLink href="/account/details" class="btn-theme-s" Match="NavLinkMatch.All"><i class="fa-regular fa-gear"></i><span>Account Details</span></NavLink>
     <NavLink href="/account/Security" class="btn-transparent"><i class="fa-regular fa-lock"></i><span>Security</span></NavLink>
     <NavLink href="/account/savedcourses" class="btn-transparent"><i class="fa-regular fa-bookmark"></i><span>Saved Courses</span></NavLink>
-    <NavLink @onclick="HandleSignOut" class="btn-transparent"><i class="fa-solid fa-right-from-bracket"></i><span>Sign Out</span></NavLink>
+    <NavLink href="/" class="btn-transparent"><i class="fa-solid fa-right-from-bracket"></i><span>Sign Out</span></NavLink>
 </nav>
 
 @code {
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
-    private async Task HandleSignOut()
-    {
-        await SignInManager.SignOutAsync();
-    }
 }

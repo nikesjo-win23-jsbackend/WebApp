@@ -37,8 +37,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 builder.Services.ConfigureApplicationCookie(x =>
 {
     x.LoginPath = "/signin";
-    x.LogoutPath = "/signout";
-    x.AccessDeniedPath = "/denied";
+    //x.LogoutPath = "/signout";
+    //x.AccessDeniedPath = "/denied";
 
     x.Cookie.HttpOnly = true;
     x.Cookie.SecurePolicy = CookieSecurePolicy.Always;

@@ -1,0 +1,146 @@
+﻿@page "/account/notifications"
+
+@attribute [Authorize]
+@attribute [StreamRendering]
+
+@rendermode InteractiveServer
+
+<PageTitle>Notifications</PageTitle>
+
+<section id="account-notifications">
+    <div class="container">
+        <aside class="account-menu">
+            <div class="profile">
+                <div class="profile-image">
+                    <img src="/images/uploads/profiles/@user.ProfileImageUrl" alt="@user.FirstName @user.LastName">
+
+                    <EditForm enctype="multipart/form-data" Model="@uploadModel" FormName="ProfileUpload" OnInvalidSubmit="HandleProfileUpload">
+                        <InputFile id="fileUploader" OnChange="HandleFileSelected" hidden />
+                        <label for="fileUploader" class="btn-circle btn-refresh"><i class="fa-sharp fa-regular fa-arrows-rotate"></i></label>
+                    </EditForm>
+                </div>
+                <div class="profile-info">
+                    <h5 class="displayname">@user.FirstName @user.LastName</h5>
+                    <p>@user.Email</p>
+                </div>
+            </div>
+            <nav>
+                <NavLink href="/account/details" class="btn-theme-s" Match="NavLinkMatch.All"><i class="fa-regular fa-gear"></i><span>Account Details</span></NavLink>
+                <NavLink href="/account/security" class="btn-transparent"><i class="fa-regular fa-lock"></i><span>Security</span></NavLink>
+                <NavLink href="/account/notifications" class="btn-transparent"><i class="fa-regular fa-bell"></i><span>Notifications</span></NavLink>
+                <NavLink href="/account/messages" class="btn-transparent"><i class="fa-regular fa-messages"></i><span>Messages</span></NavLink>
+                <NavLink href="/account/savedcourses" class="btn-transparent"><i class="fa-regular fa-bookmark"></i><span>Saved Items</span></NavLink>
+                <NavLink href="/" class="btn-transparent"><i class="fa-solid fa-right-from-bracket"></i><span>Sign Out</span></NavLink>
+            </nav>
+        </aside>
+
+        <div class="notifications-preview">
+            <h2>Notifications</h2>
+
+            <EditForm>
+                <div class="col-xl-6">
+                    <label class="form-label">Preferred email for notifications</label>
+                    <InputText type="email" class="form-control" />
+                </div>
+
+                <div id="subscribe-switch" class="btn-switch">
+                    <label class="switch" for="subscribe-mode">
+                        <input type="checkbox" id="subscribe-mode" />
+                        <span class="slider round"></span>
+                    </label>
+                    <label>Subscribe to Newsletter</label>
+                    <span>Nec, posuere non felis duis massa vitae aliquet interdum scelerisque. Neque ullamcorper.</span>
+                </div>
+
+                <div id="darkmode-switch" class="btn-switch">
+                    <label class="switch" for="darkmode-mode">
+                        <input type="checkbox" id="darkmode-mode" />
+                        <span class="slider round"></span>
+                    </label>
+                    <label>Use Dark Mode Theme in Application</label>
+                    <span>Tortor massa porttitor enim tristique neque fermentum sed.</span>
+                </div>
+
+                <div class="col-auto">
+                    <button type="reset" class="btn-gray">Cancel</button>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn-theme">Save Changes</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</section>
+
+@code {
+    private ApplicationUser user = default!;
+
+    private MultipartFormDataContent uploadModel = new MultipartFormDataContent();
+    private IBrowserFile? selectedFile;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    private void HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+    }
+
+    private async Task LoadUserDataAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userPrincipal = authState.User;
+
+        if (userPrincipal.Identity is { IsAuthenticated: true })
+        {
+            user = await UserManager.Users
+                .Include(u => u.Address)
+                .FirstOrDefaultAsync(u => u.Id == userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier))
+                ?? new ApplicationUser();
+        }
+    }
+
+    public async Task HandleProfileUpload()
+    {
+        if (selectedFile != null)
+        {
+            using var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(selectedFile.OpenReadStream(maxAllowedSize: 1024 * 1024 * 15));
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(selectedFile.ContentType);
+            content.Add(fileContent, "file", selectedFile.Name);
+
+            try
+            {
+                var response = await Http.PostAsync(Environment.GetEnvironmentVariable("FILEPROVIDER_UPLOAD_URI"), content);
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadUserDataAsync();
+                    StateHasChanged();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+    }
+
+    // [Parameter]
+    // public EventCallback<bool> ValueChanged { get; set; }
+
+    // private bool _value;
+
+    // [Parameter]
+    // public bool Value
+    // {
+    //     get { return _value; }
+    //     set
+    //     {
+    //         if (_value != value)
+    //         {
+    //             _value = value;
+    //             ValueChanged.InvokeAsync(_value);
+    //         }
+    //     }
+    // }
+}

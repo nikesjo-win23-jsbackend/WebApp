@@ -1,0 +1,243 @@
+﻿@page "/courses/{CourseId}"
+
+<PageTitle>@course?.Title</PageTitle>
+
+<h3>@course?.Title</h3>
+
+@if (course == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <section id="singlecourseshowcase">
+        @if (course != null)
+        {
+            <img class="course-img" src="/images/courses/@course.ImageHeaderUri" alt="@course.Title">
+            <div class="container">
+                <div class="header-singlecourse">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <i class="fa-solid fa-house"></i>
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <i class="fa-solid fa-angles-right"></i>
+                            <li class="breadcrumb-item"><a href="/courses">Courses</a></li>
+                            <i class="fa-solid fa-angles-right"></i>
+                            <li class="breadcrumb-item active" aria-current="page">@course.Title</li>
+                        </ol>
+                    </nav>
+                    <div class="seller-square">
+                        @if (course.IsBestseller)
+                        {
+                            <div class="best-seller">Best Seller</div>
+                        }
+                        @if (course.IsDigital)
+                        {
+                            <div class="digital">Digital</div>
+                        }
+                    </div>
+                    <div class="text-header">
+                        <h1>@course.Title</h1>
+                        <p>@course.Ingress</p>
+                    </div>
+                    <div class="rating">
+                        <div class="star">
+                            <i class="fa fa-star checked"></i>
+                            <i class="fa fa-star checked"></i>
+                            <i class="fa fa-star checked"></i>
+                            <i class="fa fa-star checked"></i>
+                            <i class="fa-regular fa-star"></i>
+                            <p>@course.Reviews</p>
+                        </div>
+                        <div class="rating-thumb">
+                            <i class="fa-regular fa-thumbs-up"></i>
+                            <p>@course.Likes</p>
+                        </div>
+                        <div class="rating-clock">
+                            <i class="fa-regular fa-clock"></i>
+                            <p>@course.Hours hours</p>
+                        </div>
+                    </div>
+                    <div class="img-text">
+                        <img class="img-author" src="/images/author-image.svg" alt="picture of albert flores">
+                        <div class="image-text-header">
+                            <p class="bold-p">Created by</p>
+                            <p class="p-normal">@string.Join(", ", course.Authors!.Select(a => a.Name))</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </section>
+    <section id="description-course">
+        <div class="container">
+            <div class="description-header">
+                <div class="singlecourse-header">
+                    <h1>Course Description</h1>
+                    <p>@course?.Content?.Description</p>
+                    <div class="learn-what">
+                        <h2>What you'll learn</h2>
+                        @if (course?.Content?.Learn != null)
+                        {
+                            @foreach (var learn in course!.Content.Learn)
+                            {
+                                <span class="checked-info"><i class="fa-regular fa-circle-check"></i><p>@course.Content.Learn</p></span>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="singlecourse-box">
+                    <h4>This course includes:</h4>
+                    @if (course?.Content?.Includes != null)
+                    {
+                        @foreach (var include in course!.Content.Includes)
+                        {
+                            <span class="course-include"><i class="fa-regular fa-file"></i><p>@course.Content.Includes</p></span>
+                        }
+                    }
+                    <div class="pricing">
+                        @if (course?.Prices?.Discount > 0)
+                        {
+                            <p class="discount">
+                                @course.Prices.Currency @course.Prices.Discount
+                                <del>@course.Prices.Currency @course.Prices.Price</del>
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="original">@course?.Prices?.Currency @course?.Prices?.Price</p>
+                        }
+                    </div>
+                    <button id="bookmark-button" class="btn-theme-s">Join course</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="program-details">
+        <div class="container">
+            @if (course?.Content?.ProgramDetails != null)
+            {
+                @foreach (var programdetail in course.Content.ProgramDetails)
+                {
+                    <div class="number">
+                        <div class="circle"><p>@programdetail.Id</p></div>
+                        <div class="square-text-details">
+                            <div class="circle-text">
+                                <h4>@programdetail.Title</h4>
+                                <p>@programdetail.Description</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </section>
+}
+
+@code {
+    private Course? course;
+
+    [Parameter]
+    public string? CourseId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(CourseId))
+        {
+            return;
+        }
+
+        var query = new GraphQLQuery
+        {
+            Query = @"
+                query ($id: String!) {
+                getCourseById(id: $id) {
+                    id
+                    title
+                    imageUri
+                    imageHeaderUri
+                    isBestseller
+                    isDigital
+                    categories
+                    ingress
+                    starRating
+                    reviews
+                    likesInProcent
+                    likes
+                    hours
+                    authors {
+                        name
+                    }
+                    prices {
+                        currency
+                        price
+                        discount
+                    }
+                    content {
+                        description
+                        includes
+                        learn
+                        programDetails {
+                            id
+                            title
+                            description
+                        }
+                    }
+                }
+            }",
+            Variables = new { id = CourseId }
+        };
+
+        var response = await Http.PostAsJsonAsync("http://localhost:7117/api/graphql", query);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<DynamicGraphQLResponse>();
+            if (result?.Data.TryGetProperty("getCourseById", out var courseJson) == true)
+            {
+                course = new Course
+                {
+                    Id = courseJson.GetProperty("id").GetString()!,
+                    Title = courseJson.GetProperty("title").GetString()!,
+                    ImageUri = courseJson.GetProperty("imageUri").GetString(),
+                    ImageHeaderUri = courseJson.GetProperty("imageHeaderUri").GetString(),
+                    IsBestseller = courseJson.GetProperty("isBestseller").GetBoolean(),
+                    IsDigital = courseJson.GetProperty("isDigital").GetBoolean(),
+                    Categories = courseJson.GetProperty("categories").EnumerateArray()
+                        .Select(category => category.GetString()!).ToArray(),
+                    Ingress = courseJson.GetProperty("ingress").GetString(),
+                    StarRating = courseJson.GetProperty("starRating").GetDecimal(),
+                    Reviews = courseJson.GetProperty("reviews").GetString(),
+                    LikesInProcent = courseJson.GetProperty("likesInProcent").GetString(),
+                    Likes = courseJson.GetProperty("likes").GetString(),
+                    Hours = courseJson.GetProperty("hours").GetString(),
+                    Authors = courseJson.GetProperty("authors").EnumerateArray()
+                        .Select(author => new Author
+                        {
+                            Name = author.GetProperty("name").GetString()!,
+                        }).ToList(),
+                    Prices = new Prices
+                    {
+                        Currency = courseJson.GetProperty("prices").GetProperty("currency").GetString(),
+                        Price = courseJson.GetProperty("prices").GetProperty("price").GetDecimal(),
+                        Discount = courseJson.GetProperty("prices").GetProperty("discount").GetDecimal()
+                    },
+                    Content = new Content
+                    {
+                        Description = courseJson.GetProperty("content").GetProperty("description").GetString(),
+                        Includes = courseJson.GetProperty("content").GetProperty("includes").EnumerateArray()
+                            .Select(include => include.GetString()!).ToArray(),
+                        Learn = courseJson.GetProperty("content").GetProperty("learn").EnumerateArray()
+                            .Select(learn => learn.GetString()!).ToArray(),
+                        ProgramDetails = courseJson.GetProperty("content").GetProperty("programDetails").EnumerateArray()
+                            .Select(detail => new ProgramDetailItem
+                            {
+                                Id = detail.GetProperty("id").GetInt32(),
+                                Title = detail.GetProperty("title").GetString()!,
+                                Description = detail.GetProperty("description").GetString()
+                            }).ToList()
+                    }
+                };
+            }
+        }
+    }
+}
