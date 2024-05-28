@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp;
 using WebApp.Components;
+using WebApp.Components.Pages;
 using WebApp.Data;
 
 
@@ -37,8 +38,6 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 builder.Services.ConfigureApplicationCookie(x =>
 {
     x.LoginPath = "/signin";
-    //x.LogoutPath = "/signout";
-    //x.AccessDeniedPath = "/denied";
 
     x.Cookie.HttpOnly = true;
     x.Cookie.SecurePolicy = CookieSecurePolicy.Always;
@@ -71,5 +70,6 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(WebApp.Client._Imports).Assembly);
 
+app.MapAdditionalIdentityEndpoints();
 
 app.Run();

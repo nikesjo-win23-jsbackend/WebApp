@@ -88,12 +88,12 @@
     public async Task OnValidSubmit(EditContext editContext)
     {
         var user = new ApplicationUser
-            {
-                FirstName = SignUpForm.FirstName,
-                LastName = SignUpForm.LastName,
-                UserName = SignUpForm.Email,
-                Email = SignUpForm.Email
-            };
+        {
+            FirstName = SignUpForm.FirstName,
+            LastName = SignUpForm.LastName,
+            UserName = SignUpForm.Email,
+            Email = SignUpForm.Email
+        };
 
         if (await UserManager.Users.AnyAsync(x => x.Email == user.Email))
         {
