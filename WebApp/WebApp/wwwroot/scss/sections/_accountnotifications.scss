@@ -25,6 +25,53 @@
                     @include h2;
                 }
             }
+
+            .notifications-form {
+                .notification-email {
+                    @include text-m;
+                    color: var(--color-gray-900);
+                    font-weight: 600;
+                }
+
+                #subscribe-switch {
+                    display: flex;
+                    gap: 20px;
+
+                    .switch {
+                        & input {
+                            &:checked + .slider {
+                                background-color: var(--color-success);
+                            }
+
+                            &:focus + .slider {
+                                box-shadow: 0 0 1px var(--color-success);
+                            }
+                        }
+                    }
+
+                    .switch-description {
+                        display: flex;
+                        flex-direction: column;
+
+                        label {
+                            @include text-m;
+                            color: var(--color-gray-900);
+                            font-weight: 600;
+                        }
+
+                        span {
+                            @include text-s;
+                            color: var(--color-gray-600);
+                        }
+                    }
+                }
+
+                .notifications-buttons {
+                    margin-top: 250px;
+                    display: flex;
+                    gap: 15px;
+                }
+            }
         }
     }
 }

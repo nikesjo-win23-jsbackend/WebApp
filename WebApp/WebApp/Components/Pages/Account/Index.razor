@@ -1,4 +1,5 @@
-﻿@page "/account/details"
+﻿
+@page "/account/details"
 
 @implements IDisposable
 @inject NavigationManager NavigationManager
@@ -32,12 +33,12 @@ else
             </div>
         </div>
         <nav>
-            <NavLink href="/account/details" class="btn-theme-s" Match="NavLinkMatch.All"><i class="fa-regular fa-gear"></i><span>Account Details</span></NavLink>
-            <NavLink href="/account/notifications" class="btn-transparent"><i class="fa-regular fa-bell"></i><span>Notifications</span></NavLink>
+            <NavLink href="/account/details" class="btn-nav" Match="NavLinkMatch.All"><i class="fa-regular fa-gear"></i><span>Account Details</span></NavLink>
+            <NavLink href="/account/notifications" class="btn-nav"><i class="fa-regular fa-bell"></i><span>Notifications</span></NavLink>
             <form action="/account/signout" method="post">
                 <AntiforgeryToken />
                 <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                <button type="submit" class="btn-transparent">
+                <button type="submit" class="btn-nav">
                     <i aria-hidden="true" class="fa-solid fa-right-from-bracket"></i><span>Sign Out</span>
                 </button>
             </form>
@@ -64,7 +65,7 @@ else
             </div>
 
             <div class="col-xl-6">
-                <labe class="form-label">Last name</labe>
+                <label class="form-label">Last name</label>
                 <input type="text" @bind-value="Input.LastName" class="form-control" placeholder="Enter your last name" />
                 <ValidationMessage For="() => Input.LastName" class="text-danger" />
             </div>
@@ -204,6 +205,8 @@ else
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
                 user.Email = Input.Email!;
+                user.UserName = Input.Email;
+                user.NormalizedUserName = Input.Email;
                 user.PhoneNumber = Input.Phone;
                 user.Bio = Input.Biography;
 

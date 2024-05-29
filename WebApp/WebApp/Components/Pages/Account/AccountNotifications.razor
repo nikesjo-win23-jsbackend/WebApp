@@ -34,12 +34,12 @@ else
                     </div>
                 </div>
                 <nav>
-                    <NavLink href="/account/details" class="btn-theme-s" Match="NavLinkMatch.All"><i class="fa-regular fa-gear"></i><span>Account Details</span></NavLink>
-                    <NavLink href="/account/notifications" class="btn-transparent"><i class="fa-regular fa-bell"></i><span>Notifications</span></NavLink>
+                    <NavLink href="/account/details" class="btn-nav" Match="NavLinkMatch.All"><i class="fa-regular fa-gear"></i><span>Account Details</span></NavLink>
+                    <NavLink href="/account/notifications" class="btn-nav"><i class="fa-regular fa-bell"></i><span>Notifications</span></NavLink>
                     <form action="/account/signout" method="post">
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="btn-transparent">
+                        <button class="btn-nav" type="submit">
                             <i aria-hidden="true" class="fa-solid fa-right-from-bracket"></i><span>Sign Out</span>
                         </button>
                     </form>
@@ -61,41 +61,32 @@ else
                         @ErrorMessage
                     </div>
                 }
-                <EditForm Model="formModel" OnValidSubmit="HandleValidSubmit" class="row g-4" novalidate>
-                    @*                 <div class="col-xl-6">
-                <label class="form-label">Preferred email for notifications</label>
-                <input type="email" class="form-control" />
-                </div> *@
+                <EditForm Model="formModel" FormName="newsletter" OnValidSubmit="OnValidSubmitAsync" class="row g-4 notifications-form" novalidate>
+                    <div class="col-xl-6">
+                        <label class="form-label notification-email">Preferred email for notifications</label>
+                        <input type="email" class="form-control" @bind-value="formModel.Email" placeholder="example@gmail.com" />
+                    </div>
 
                     <div id="subscribe-switch" class="btn-switch">
                         <label class="switch" for="subscribe-mode">
-                            <input type="checkbox" id="subscribe-mode" @bind="formModel.Newsletter" />
+                            <input type="checkbox" id="subscribe-mode" @bind-value="formModel.Newsletter" />
                             <span class="slider round"></span>
                         </label>
-                        <label>Subscribe to Newsletter</label>
-                        <span>Nec, posuere non felis duis massa vitae aliquet interdum scelerisque. Neque ullamcorper.</span>
+                        <div class="switch-description">
+                            <label>Subscribe to Newsletter</label>
+                            <span>Nec, posuere non felis duis massa vitae aliquet interdum scelerisque. Neque ullamcorper.</span>
+                        </div>
                     </div>
 
-                    @*                 <div id="darkmode-switch" class="btn-switch">
-                <label class="switch" for="darkmode-mode">
-                <input type="checkbox" id="darkmode-mode" />
-                <span class="slider round"></span>
-                </label>
-                <label>Use Dark Mode Theme in Application</label>
-                <span>Tortor massa porttitor enim tristique neque fermentum sed.</span>
-                </div> *@
-
-                    <div class="col-auto">
-                        <button type="reset" class="btn-gray">Cancel</button>
-                    </div>
-                    <div class="col-auto">
-                        <button type="submit" class="btn-theme">Save Changes</button>
+                    <div class="notifications-buttons">
+                        <div class="col-auto">
+                            <button type="reset" class="btn-gray">Cancel</button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn-theme">Save Changes</button>
+                        </div>
                     </div>
                 </EditForm>
-                @if (formSubmitted)
-                {
-                    <p>Form Submitted! Feature Enabled: @formModel.Newsletter</p>
-                }
             </div>
         </div>
     </section>
@@ -105,6 +96,8 @@ else
     private string? currentUrl;
 
     private ApplicationUser user = default!;
+
+    private FormModel formModel = new FormModel();
 
     private string? ErrorMessage { get; set; }
     private string? SuccessMessage { get; set; }
@@ -118,14 +111,6 @@ else
     private void HandleFileSelected(InputFileChangeEventArgs e)
     {
         selectedFile = e.File;
-    }
-
-    private FormModel formModel = new FormModel();
-    private bool formSubmitted = false;
-
-    private void HandleValidSubmit()
-    {
-        formSubmitted = true;
     }
 
     protected override async Task OnInitializedAsync()
@@ -154,6 +139,47 @@ else
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
 
+    private async Task OnValidSubmitAsync()
+    {
+        string url = formModel.Newsletter ? "http://localhost:7070/api/Subscribe" : "http://localhost:7070/api/Unsubscribe";
+        var subscribeEmail = new { Email = formModel.Email };
+
+        try
+        {
+            var result = await Http.PostAsJsonAsync(url, subscribeEmail);
+            var responseContent = await result.Content.ReadAsStringAsync();
+            
+            try
+            {
+                var apiResponse = JsonConvert.DeserializeObject<ApiResponse>(responseContent);
+
+                if (apiResponse != null)
+                {
+                    if (result.IsSuccessStatusCode)
+                    {
+                        SuccessMessage = apiResponse.Message;
+                    }
+                    else
+                    {
+                        ErrorMessage = apiResponse.Message;
+                    }
+                }
+                else
+                {
+                    ErrorMessage = "Invalid response format.";
+                }
+            }
+            catch (JsonException jsonEx)
+            {
+                ErrorMessage = $"Error parsing JSON response: {jsonEx.Message}";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+
     private async Task LoadUserDataAsync()
     {
         try
@@ -179,20 +205,6 @@ else
         }
 
     }
-
-    // private async Task LoadUserDataAsync()
-    // {
-    //     var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-    //     var userPrincipal = authState.User;
-
-    //     if (userPrincipal.Identity is { IsAuthenticated: true })
-    //     {
-    //         user = await UserManager.Users
-    //             .Include(u => u.Address)
-    //             .FirstOrDefaultAsync(u => u.Id == userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier))
-    //             ?? new ApplicationUser();
-    //     }
-    // }
 
     public async Task HandleProfileUpload()
     {
@@ -221,25 +233,7 @@ else
 
     public class FormModel
     {
+        public string Email { get; set; } = null!;
         public bool Newsletter { get; set; }
     }
-
-    // [Parameter]
-    // public EventCallback<bool> ValueChanged { get; set; }
-
-    // private bool _value;
-
-    // [Parameter]
-    // public bool Value
-    // {
-    //     get { return _value; }
-    //     set
-    //     {
-    //         if (_value != value)
-    //         {
-    //             _value = value;
-    //             ValueChanged.InvokeAsync(_value);
-    //         }
-    //     }
-    // }
 }

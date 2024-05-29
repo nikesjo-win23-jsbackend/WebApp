@@ -485,6 +485,45 @@ a:hover {
   font-weight: 600;
 }
 
+.btn-nav {
+  border-radius: 6px;
+  font-size: 16px;
+  gap: 12px;
+  color: var(--color-gray-800);
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 30px;
+  border: none;
+  justify-content: start;
+  text-decoration: none;
+  font-weight: 600;
+}
+.btn-nav i {
+  color: var(--color-gray-600);
+  margin-right: 10px;
+}
+.btn-nav:hover {
+  color: var(--color-theme);
+  text-decoration: underline;
+}
+.btn-nav.active {
+  box-shadow: 0px 8px 18px -8px rgba(99, 102, 241, 0.9);
+  background-color: var(--color-theme);
+  color: var(--color-white);
+  max-width: 306px;
+  font-size: 16px;
+}
+.btn-nav.active i {
+  color: var(--color-white);
+}
+@media (min-width: 768px) {
+  .btn-nav.active {
+    width: 306px;
+    justify-content: start;
+    padding: 10px 28px 10px;
+  }
+}
+
 textarea,
 select,
 input:not([type=checkbox]) {
@@ -1708,6 +1747,51 @@ footer .container .social-media {
     color: var(--color-gray-900);
     font-size: 32px !important;
   }
+}
+#account-notifications .container .notifications-preview .notifications-form .notification-email {
+  line-height: 160%;
+  font-weight: 400;
+  color: var(--color-gray-700);
+  font-family: "Manrope", sans-serif;
+  font-size: 16px !important;
+  color: var(--color-gray-900);
+  font-weight: 600;
+}
+#account-notifications .container .notifications-preview .notifications-form #subscribe-switch {
+  display: flex;
+  gap: 20px;
+}
+#account-notifications .container .notifications-preview .notifications-form #subscribe-switch .switch input:checked + .slider {
+  background-color: var(--color-success);
+}
+#account-notifications .container .notifications-preview .notifications-form #subscribe-switch .switch input:focus + .slider {
+  box-shadow: 0 0 1px var(--color-success);
+}
+#account-notifications .container .notifications-preview .notifications-form #subscribe-switch .switch-description {
+  display: flex;
+  flex-direction: column;
+}
+#account-notifications .container .notifications-preview .notifications-form #subscribe-switch .switch-description label {
+  line-height: 160%;
+  font-weight: 400;
+  color: var(--color-gray-700);
+  font-family: "Manrope", sans-serif;
+  font-size: 16px !important;
+  color: var(--color-gray-900);
+  font-weight: 600;
+}
+#account-notifications .container .notifications-preview .notifications-form #subscribe-switch .switch-description span {
+  line-height: 160%;
+  font-weight: 400;
+  color: var(--color-gray-700);
+  font-family: "Manrope", sans-serif;
+  font-size: 14px !important;
+  color: var(--color-gray-600);
+}
+#account-notifications .container .notifications-preview .notifications-form .notifications-buttons {
+  margin-top: 250px;
+  display: flex;
+  gap: 15px;
 }
 
 #contact {
@@ -2994,51 +3078,11 @@ footer .container .social-media {
     flex-direction: column;
   }
 }
-.account-menu nav a {
-  color: var(--color-gray-800);
-  padding: 10px;
-  line-height: 160%;
-  font-weight: 400;
-  color: var(--color-gray-700);
-  font-family: "Manrope", sans-serif;
-  font-size: 16px;
-  color: var(--color-gray-800);
-  font-weight: 600 !important;
-  text-decoration: none;
-  align-items: center;
-  justify-content: center;
-}
-.account-menu nav a span {
-  display: none;
-}
-@media (min-width: 768px) {
-  .account-menu nav a span {
-    display: inline;
-  }
-}
-.account-menu nav .btn-transparent {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 30px;
-}
-.account-menu nav .btn-transparent i {
-  color: var(--color-gray-600);
-  margin-right: 10px;
-}
-.account-menu nav .btn-transparent:hover {
-  color: var(--color-theme);
-}
-.account-menu nav .btn-theme-s {
-  max-width: 306px;
-  font-size: 16px;
-  color: var(--color-white);
-}
-@media (min-width: 768px) {
-  .account-menu nav .btn-theme-s {
-    width: 306px;
-    justify-content: start;
-    padding: 10px 28px 10px;
-  }
+.account-menu nav form button.btn-nav {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background-color: transparent;
 }
 
 #blazor-error-ui {
