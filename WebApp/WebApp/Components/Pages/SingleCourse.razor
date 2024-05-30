@@ -1,4 +1,5 @@
 ﻿@page "/courses/{CourseId}"
+@attribute [Authorize]
 
 <PageTitle>@course?.Title</PageTitle>
 
@@ -113,11 +114,46 @@ else
             </div>
         </div>
     </section>
-    <section id="program-details">
+    <section class="program-details">
         <div class="container">
-            @if (course?.Content?.ProgramDetails != null)
+            @if (course?.ProgramDetails != null)
             {
-                @foreach (var programdetail in course.Content.ProgramDetails)
+                <h1>Program Details</h1>
+                <div class="number">
+                    <div class="circle"><p>1</p></div>
+                    <div class="square-text-details">
+                        <div class="circle-text">
+                            <h4>@course.ProgramDetails.Title_1</h4>
+                            <p>@course.ProgramDetails.Description_1</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="number">
+                    <div class="circle"><p>2</p></div>
+                    <div class="square-text-details">
+                        <div class="circle-text">
+                            <h4>@course.ProgramDetails.Title_2</h4>
+                            <p>@course.ProgramDetails.Description_2</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="number">
+                    <div class="circle"><p>3</p></div>
+                    <div class="square-text-details">
+                        <div class="circle-text">
+                            <h4>@course.ProgramDetails.Title_3</h4>
+                            <p>@course.ProgramDetails.Description_3</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+@*     <section id="program-details">
+        <div class="container">
+            @if (course?.ProgramDetails != null)
+            {
+                @foreach (var programdetail in course.ProgramDetails)
                 {
                     <div class="number">
                         <div class="circle"><p>@programdetail.Id</p></div>
@@ -131,9 +167,8 @@ else
                 }
             }
         </div>
-    </section>
+    </section> *@
 }
-
 @code {
     private Course? course;
 
@@ -148,8 +183,8 @@ else
         }
 
         var query = new GraphQLQuery
-        {
-            Query = @"
+            {
+                Query = @"
                 query ($id: String!) {
                 getCourseById(id: $id) {
                     id
@@ -177,18 +212,21 @@ else
                         description
                         includes
                         learn
-                        programDetails {
-                            id
-                            title
-                            description
-                        }
+                    }
+                    programDetails {
+                        title_1
+                        description_1
+                        title_2
+                        description_2
+                        title_3
+                        description_3
                     }
                 }
             }",
-            Variables = new { id = CourseId }
-        };
+                Variables = new { id = CourseId }
+            };
 
-        var response = await Http.PostAsJsonAsync("http://localhost:7117/api/graphql", query);
+        var response = await Http.PostAsJsonAsync("https://courseprovider-nikesjo.azurewebsites.net/api/graphql?code=E2an0F4ye5fmD9IGxflSEEA2A3PQsf23TSD8CNFm1n2FAzFuR2IXJg%3D%3D", query);
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadFromJsonAsync<DynamicGraphQLResponse>();
@@ -203,7 +241,7 @@ else
                     IsBestseller = courseJson.GetProperty("isBestseller").GetBoolean(),
                     IsDigital = courseJson.GetProperty("isDigital").GetBoolean(),
                     Categories = courseJson.GetProperty("categories").EnumerateArray()
-                        .Select(category => category.GetString()!).ToArray(),
+                            .Select(category => category.GetString()!).ToArray(),
                     Ingress = courseJson.GetProperty("ingress").GetString(),
                     StarRating = courseJson.GetProperty("starRating").GetDecimal(),
                     Reviews = courseJson.GetProperty("reviews").GetString(),
@@ -211,10 +249,10 @@ else
                     Likes = courseJson.GetProperty("likes").GetString(),
                     Hours = courseJson.GetProperty("hours").GetString(),
                     Authors = courseJson.GetProperty("authors").EnumerateArray()
-                        .Select(author => new Author
-                        {
-                            Name = author.GetProperty("name").GetString()!,
-                        }).ToList(),
+                            .Select(author => new Author
+                            {
+                                Name = author.GetProperty("name").GetString()!,
+                            }).ToList(),
                     Prices = new Prices
                     {
                         Currency = courseJson.GetProperty("prices").GetProperty("currency").GetString(),
@@ -225,16 +263,18 @@ else
                     {
                         Description = courseJson.GetProperty("content").GetProperty("description").GetString(),
                         Includes = courseJson.GetProperty("content").GetProperty("includes").EnumerateArray()
-                            .Select(include => include.GetString()!).ToArray(),
+                                .Select(include => include.GetString()!).ToArray(),
                         Learn = courseJson.GetProperty("content").GetProperty("learn").EnumerateArray()
-                            .Select(learn => learn.GetString()!).ToArray(),
-                        ProgramDetails = courseJson.GetProperty("content").GetProperty("programDetails").EnumerateArray()
-                            .Select(detail => new ProgramDetailItem
-                            {
-                                Id = detail.GetProperty("id").GetInt32(),
-                                Title = detail.GetProperty("title").GetString()!,
-                                Description = detail.GetProperty("description").GetString()
-                            }).ToList()
+                                .Select(learn => learn.GetString()!).ToArray(),
+                    },
+                    ProgramDetails = new ProgramDetailItem
+                    {
+                        Title_1 = courseJson.GetProperty("programDetails").GetProperty("title_1").GetString(),
+                        Description_1 = courseJson.GetProperty("programDetails").GetProperty("description_1").GetString(),
+                        Title_2 = courseJson.GetProperty("programDetails").GetProperty("title_2").GetString(),
+                        Description_2 = courseJson.GetProperty("programDetails").GetProperty("description_2").GetString(),
+                        Title_3 = courseJson.GetProperty("programDetails").GetProperty("title_3").GetString(),
+                        Description_3 = courseJson.GetProperty("programDetails").GetProperty("description_3").GetString(),
                     }
                 };
             }
