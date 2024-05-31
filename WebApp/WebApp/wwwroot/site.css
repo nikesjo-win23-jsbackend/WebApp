@@ -2662,6 +2662,9 @@ footer .container .social-media {
 #description-course .container .description-header .singlecourse-header h1 {
   padding-bottom: 10px;
 }
+#description-course .container .description-header .singlecourse-header .courseDescription {
+  max-width: 45rem;
+}
 #description-course .container .description-header .singlecourse-header .learn-what h2 {
   padding-top: 20px;
 }
@@ -2677,6 +2680,7 @@ footer .container .social-media {
   display: flex;
   flex-direction: column;
   padding: 30px 100px 40px 30px;
+  width: 416px;
   height: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -2694,20 +2698,23 @@ footer .container .social-media {
 #description-course .container .description-header .singlecourse-box .pricing {
   display: flex;
   gap: 10px;
-  font-size: 32px;
+  font-size: 18px;
   font-weight: 700;
-  padding: 25px 0 25px 0;
+  padding-bottom: 15px;
+  padding-top: 25px;
+  margin-top: auto;
 }
 #description-course .container .description-header .singlecourse-box .pricing .discount {
-  color: var(--color-gray-900);
+  color: var(--color-black);
+  font-size: 32px;
 }
 #description-course .container .description-header .singlecourse-box .pricing .original {
   color: var(--color-theme);
 }
 #description-course .container .description-header .singlecourse-box .pricing .discount-enabled {
-  font-size: 20px;
   color: var(--color-gray-600);
   font-weight: 400;
+  font-size: 16px;
   text-decoration: line-through;
 }
 #description-course .container .description-header .singlecourse-box .btn-theme-s {
@@ -2715,6 +2722,9 @@ footer .container .social-media {
   cursor: pointer;
 }
 
+#program-details .container h1 {
+  padding-top: 50px;
+}
 #program-details .container .number {
   display: flex;
   align-items: center;
@@ -2722,8 +2732,8 @@ footer .container .social-media {
 }
 #program-details .container .number .circle {
   display: none;
-  height: 50px;
-  width: 50px;
+  height: 60px;
+  width: 60px;
   border-radius: 50%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0);
 }
@@ -2740,13 +2750,12 @@ footer .container .social-media {
   border: 7px solid rgba(131, 130, 130, 0.2);
   border-radius: 50%;
   box-sizing: border-box;
+  font-weight: 600;
+  font-size: 24px;
 }
 #program-details .container .number .square-text-details {
   max-width: 650px;
   padding: 20px;
-}
-#program-details .container .number .square-text-details .circle-text {
-  margin-top: 35px;
 }
 
 #author .container .author-img-text {

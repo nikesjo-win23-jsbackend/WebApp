@@ -3,8 +3,6 @@
 
 <PageTitle>@course?.Title</PageTitle>
 
-<h3>@course?.Title</h3>
-
 @if (course == null)
 {
     <p>Loading...</p>
@@ -75,14 +73,14 @@ else
             <div class="description-header">
                 <div class="singlecourse-header">
                     <h1>Course Description</h1>
-                    <p>@course?.Content?.Description</p>
+                    <p class="courseDescription">@course?.Content?.Description</p>
                     <div class="learn-what">
                         <h2>What you'll learn</h2>
                         @if (course?.Content?.Learn != null)
                         {
                             @foreach (var learn in course!.Content.Learn)
                             {
-                                <span class="checked-info"><i class="fa-regular fa-circle-check"></i><p>@course.Content.Learn</p></span>
+                                <span class="checked-info"><i class="fa-regular fa-circle-check"></i><p>@learn</p></span>
                             }
                         }
                     </div>
@@ -93,28 +91,31 @@ else
                     {
                         @foreach (var include in course!.Content.Includes)
                         {
-                            <span class="course-include"><i class="fa-regular fa-file"></i><p>@course.Content.Includes</p></span>
+                            <span class="course-include"><i class="fa-regular fa-circle-check"></i><p>@include</p></span>
                         }
                     }
-                    <div class="pricing">
-                        @if (course?.Prices?.Discount > 0)
-                        {
-                            <p class="discount">
-                                @course.Prices.Currency @course.Prices.Discount
-                                <del>@course.Prices.Currency @course.Prices.Price</del>
-                            </p>
-                        }
-                        else
-                        {
-                            <p class="original">@course?.Prices?.Currency @course?.Prices?.Price</p>
-                        }
-                    </div>
+                    @if (course?.Prices != null)
+                    {
+                        <div class="pricing">
+                            @if (course.Prices.Discount > 0)
+                            {
+                                <p class="discount">
+                                    @course.Prices.Currency @course.Prices.Discount
+                                    <span class="discount-enabled">@course.Prices.Currency @course.Prices.Price</span>
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="original">@course.Prices.Currency @course.Prices.Price</p>
+                            }
+                        </div>
+                    }
                     <button id="bookmark-button" class="btn-theme-s">Join course</button>
                 </div>
             </div>
         </div>
     </section>
-    <section class="program-details">
+    <section id="program-details">
         <div class="container">
             @if (course?.ProgramDetails != null)
             {
@@ -149,26 +150,8 @@ else
             }
         </div>
     </section>
-@*     <section id="program-details">
-        <div class="container">
-            @if (course?.ProgramDetails != null)
-            {
-                @foreach (var programdetail in course.ProgramDetails)
-                {
-                    <div class="number">
-                        <div class="circle"><p>@programdetail.Id</p></div>
-                        <div class="square-text-details">
-                            <div class="circle-text">
-                                <h4>@programdetail.Title</h4>
-                                <p>@programdetail.Description</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-        </div>
-    </section> *@
 }
+
 @code {
     private Course? course;
 

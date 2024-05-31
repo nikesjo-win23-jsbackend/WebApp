@@ -1,6 +1,9 @@
 #program-details {
 
     .container {
+        h1{
+            padding-top: 50px;
+        }
 
         .number {
             display: flex;
@@ -9,8 +12,8 @@
 
             .circle {
                 display: none;
-                height: 50px;
-                width: 50px;
+                height: 60px;
+                width: 60px;
                 border-radius: 50%;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0);
 
@@ -26,16 +29,14 @@
                     border: 7px solid rgba(131, 130, 130, 0.2);
                     border-radius: 50%;
                     box-sizing: border-box;
+                    font-weight: 600;
+                    font-size: 24px;
                 }
             }
 
             .square-text-details {
                 max-width: 650px;
                 padding: 20px;
-
-                .circle-text {
-                    margin-top: 35px;
-                }
             }
         }
     }

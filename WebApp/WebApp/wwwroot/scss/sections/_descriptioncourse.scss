@@ -17,6 +17,9 @@
                     padding-bottom: 10px;
                 }
 
+                .courseDescription {
+                    max-width: 45rem;
+                }
 
                 .learn-what {
                     h2 {
@@ -39,6 +42,7 @@
                 display: flex;
                 flex-direction: column;
                 padding: 30px 100px 40px 30px;
+                width: 416px;
                 height: 100%;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
@@ -59,12 +63,15 @@
                 .pricing {
                     display: flex;
                     gap: 10px;
-                    font-size: 32px;
+                    font-size: 18px;
                     font-weight: 700;
-                    padding: 25px 0 25px 0;
+                    padding-bottom: 15px;
+                    padding-top: 25px;
+                    margin-top: auto;
 
                     .discount {
-                        color: var(--color-gray-900);
+                        color: var(--color-black);
+                        font-size: 32px;
                     }
 
                     .original {
@@ -72,9 +79,9 @@
                     }
 
                     .discount-enabled {
-                        font-size: 20px;
                         color: var(--color-gray-600);
                         font-weight: 400;
+                        font-size: 16px;
                         text-decoration: line-through;
                     }
                 }

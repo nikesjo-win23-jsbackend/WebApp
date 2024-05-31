@@ -12,7 +12,7 @@
             <ul class="breadcrumb">
 
                 <li class="breadcrumb-item">
-                    <a asp-controller="Home" asp-action="Index">
+                    <a href="/">
                         <span><i class="fa-solid fa-house" aria-hidden="true"></i></span>
                         <span>Home</span>
                     </a>
@@ -32,13 +32,6 @@
                     <div class="selected">All categories</div>
                     <div class="select-options">
                         <div class="option" data-value="all">All categories</div>
-@*                         @if (courses.Categories != null)
-                        {
-                            foreach (var category in Model.Categories)
-                            {
-                                <div class="option" data-value="@category.CategoryName">@category.CategoryName</div>
-                            }
-                        } *@
                     </div>
                 </div>
 
@@ -71,11 +64,6 @@
                         <div class="content" onclick="location.href='/courses/@course.Id'">
                             <h5>@course.Title</h5>
                             <p class="author">By @string.Join(", ", course.Authors!.Select(a => a.Name))</p>
-@*                             @foreach (var author in courses)
-                            {
-                                <p class="author">By @course.Authors</p>
-                            } *@
-
                             @if (course.Prices != null)
                             {
                                 <div class="pricing">
@@ -83,7 +71,7 @@
                                     {
                                         <p class="discount">
                                             @course.Prices.Currency @course.Prices.Discount
-                                            <del>@course.Prices.Currency @course.Prices.Price</del>
+                                            <span class="discount-enabled">@course.Prices.Currency @course.Prices.Price</span>
                                         </p>
                                     }
                                     else
@@ -92,14 +80,6 @@
                                     }
                                 </div>
                             }
-@*                             <div class="pricing">
-                                @if (!string.IsNullOrEmpty(course.Prices?.Discount))
-                                {
-                                    <div class="discount">@course.Prices.Discount</div>
-                                }
-
-                                <div class="original @(!string.IsNullOrEmpty(course.Prices?.Discount) ? "discount-enabled" : "")">@course.Prices?.Price</div>
-                            </div> *@
                             <div class="footer">
                                 <div class="hours">
                                     <i class="fa-regular fa-clock"></i>@course.Hours hours
@@ -115,33 +95,12 @@
         </div>
 
         <div class="pagination">
+            <i class="fa-solid fa-less-than"></i>
             <a class="number active" href="/courses">1</a>
             <a class="number" href="/courses">2</a>
             <a class="number" href="/courses">3</a>
+            <i class="fa-solid fa-greater-than"></i>
         </div>
-@*         @if (Model.Courses != null)
-        {
-
-
-            @if (Model.Pagination != null && Model.Pagination.TotalPages > 1)
-            {
-                <div class="pagination">
-                    <i class="fa-solid fa-less-than"></i>
-                    @for (int i = 1; i <= Model.Pagination.TotalPages; i++)
-                    {
-                        if (i == Model.Pagination.CurrentPage)
-                        {
-                            <span class="number active">@i</span>
-                        }
-                        else
-                        {
-                            <a class="number" href="@Url.Action("Courses", new { pageNumber = i, pageSize = Model.Pagination.PageSize })">@i</a>
-                        }
-                    }
-                    <i class="fa-solid fa-greater-than"></i>
-                </div>
-            }
-        } *@
         <div class="work-section">
             <div class="work-text">
                 <h5>Ready to get Started?</h5>
