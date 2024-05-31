@@ -15,10 +15,17 @@
     <div class="container">
         <EditForm FormName="signinform" Model="SignInForm" OnValidSubmit="LoginUser" method="post" novalidate>
             <DataAnnotationsValidator />
-            @if (!string.IsNullOrEmpty(StatusMessage))
+            @if (!string.IsNullOrEmpty(SuccessMessage))
             {
-                <div class="alert alert-danger">
-                    @StatusMessage
+                <div id="form-success" class="alert alert-success" role="alert">
+                    @SuccessMessage
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div id="form-error" class="alert alert-danger" role="alert">
+                    @ErrorMessage
                 </div>
             }
             <h1>Welcome Back</h1>
@@ -51,8 +58,9 @@
 
 
 @code {
+    private string? ErrorMessage { get; set; }
 
-    private string? StatusMessage { get; set; }
+    private string? SuccessMessage { get; set; }
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;

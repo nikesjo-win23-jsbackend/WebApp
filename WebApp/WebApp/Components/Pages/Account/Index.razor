@@ -45,10 +45,17 @@ else
         </nav>
     </aside>
     <div class="details-preview">
-        @if (!string.IsNullOrEmpty(StatusMessage))
+        @if (!string.IsNullOrEmpty(SuccessMessage))
         {
-            <div class="alert alert-danger">
-            @StatusMessage
+            <div id="form-success" class="alert alert-success" role="alert">
+                @SuccessMessage
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div id="form-error" class="alert alert-danger" role="alert">
+                @ErrorMessage
             </div>
         }
         <h2>Account Details</h2>
@@ -138,8 +145,9 @@ else
 
     private ApplicationUser user = default!;
 
-    [SupplyParameterFromQuery]
-    public string? StatusMessage { get; set; }
+    private string? ErrorMessage { get; set; }
+
+    private string? SuccessMessage { get; set; }
 
     private MultipartFormDataContent uploadModel = new MultipartFormDataContent();
     private IBrowserFile? selectedFile;
@@ -213,18 +221,18 @@ else
                 var updateUserResult = await UserManager.UpdateAsync(user);
                 if (!updateUserResult.Succeeded)
                 {
-                    StatusMessage = "Failed to update user information.";
+                    ErrorMessage = "Failed to update user information.";
                 }
                 else
                 {
-                    StatusMessage = "Profile updated successfully.";
+                    SuccessMessage = "Profile updated successfully.";
                     StateHasChanged();
                 }
             }
         }
         catch (Exception ex)
         {
-            StatusMessage = $"An error occurred while updating the profile: {ex.Message}";
+            ErrorMessage = $"An error occurred while updating the profile: {ex.Message}";
         }
     }
 
@@ -247,18 +255,18 @@ else
                 var updateUserResult = await UserManager.UpdateAsync(user);
                 if (!updateUserResult.Succeeded)
                 {
-                    StatusMessage = "Failed to update user information.";
+                    ErrorMessage = "Failed to update user information.";
                 }
                 else
                 {
-                    StatusMessage = "Profile updated successfully.";
+                    SuccessMessage = "Profile updated successfully.";
                     StateHasChanged();
                 }
             }
         }
         catch (Exception ex)
         {
-            StatusMessage = $"An error occurred while updating the profile: {ex.Message}";
+            ErrorMessage = $"An error occurred while updating the profile: {ex.Message}";
         }
     }
 

@@ -21,10 +21,17 @@
     <div class="container">
         <EditForm FormName="signupform" Model="SignUpForm" OnValidSubmit="OnValidSubmit" asp-route-returnUrl="@ReturnUrl" method="post" novalidate>
             <DataAnnotationsValidator />
-            @if (!string.IsNullOrEmpty(StatusMessage))
+            @if (!string.IsNullOrEmpty(SuccessMessage))
             {
-                <div class="alert alert-danger">
-                    @StatusMessage
+                <div id="form-success" class="alert alert-success" role="alert">
+                    @SuccessMessage
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div id="form-error" class="alert alert-danger" role="alert">
+                    @ErrorMessage
                 </div>
             }
             <h1>Create Account</h1>
@@ -75,8 +82,9 @@
 
 
 @code {
-    [SupplyParameterFromQuery]
-    public string? StatusMessage { get; set; }
+    private string? ErrorMessage { get; set; }
+
+    private string? SuccessMessage { get; set; }
 
     [SupplyParameterFromQuery]
     public string? ReturnUrl { get; set; }
