@@ -104,14 +104,14 @@
 
         if (await UserManager.Users.AnyAsync(x => x.Email == user.Email))
         {
-            StatusMessage = "Email is already in use.";
+            ErrorMessage = "Email is already in use.";
             return;
         }
 
         var result = await UserManager.CreateAsync(user, SignUpForm.Password);
         if (!result.Succeeded)
         {
-            StatusMessage = "Unable to register account. Please try again.";
+            ErrorMessage = "Unable to register account. Please try again.";
             return;
         };
 
